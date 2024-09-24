@@ -12,7 +12,8 @@ const WeatherKeyboard = async (msg) => {
                     [{
                         text: "📍 Lokatsiyani yuborish",
                         request_location: true
-                    }]
+                    }],
+                    ["Menyu"]
                 ],
                 resize_keyboard: true,
             }
@@ -27,7 +28,8 @@ const WeatherKeyboard = async (msg) => {
                     [{
                         text: "📍 Отправить местоположение",
                         request_location: true
-                    }]
+                    }],
+                    ["Меню"]
                 ],
                 resize_keyboard: true,
             }
@@ -41,7 +43,8 @@ const WeatherKeyboard = async (msg) => {
                     [{
                         text: "📍 Send location",
                         request_location: true
-                    }]
+                    }],
+                    ["Menu"]
                 ],
                 resize_keyboard: true,
             }
