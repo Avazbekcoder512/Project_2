@@ -1,7 +1,7 @@
 const { bot } = require("../bot")
 const User = require("../../model/user.model")
 
-const Weather = async (msg) => {
+const WeatherKeyboard = async (msg) => {
     const chatId = msg.from.id
     const user = await User.findOne({chatId: chatId})
 
@@ -49,4 +49,4 @@ const Weather = async (msg) => {
     }
 }
 
-module.exports = Weather
+module.exports = WeatherKeyboard

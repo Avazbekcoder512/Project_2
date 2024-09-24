@@ -5,10 +5,10 @@ const { userMenu } = require("./helper/userMenyu")
 const { getAllUsers } = require("./helper/users")
 const { Profile } = require("./helper/profile")
 const adminMenyu = require("./helper/adminMenyu")
-const Weather = require("./helper/weather.keyboard")
 const getWeatherRu = require("./helper/weather.ru")
 const getWeatherEn = require("./helper/weather.en")
 const getWeatherUz = require("./helper/weather.uz")
+const WeatherKeyboard = require("./helper/weather.keyboard")
 
 bot.on("message" , async msg => {
     const chatId = msg.from.id
@@ -39,7 +39,7 @@ bot.on("message" , async msg => {
         }
         
         userMenu(msg)
-        Weather(msg)
+        WeatherKeyboard(msg)
 
 
         if (msg.location && user.language === "O'zb") {
