@@ -27,7 +27,8 @@ const getNewsEn = async (msg) => {
     let end = start + newsPerPage;
     let newsToShow = cachedNews.slice(start, end);
 
-    let messageText = newsToShow
+    try {
+      let messageText = newsToShow
       .map((item) => {
         return `📰 *${item.title}*\n📅 ${item.pubDate}\n🔗 [Read the article](${item.link})`;
       })
@@ -51,6 +52,9 @@ const getNewsEn = async (msg) => {
         }
     });
     return sentMessage
+    } catch (error) {
+      console.log(error);
+    }
 }
 
 

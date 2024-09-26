@@ -167,31 +167,35 @@ bot.on('callback_query', async (query) => {
   const data = query.data;
   const user = await User.findOne({ chatId: chatId }).lean();
 
-  if (user.language === "O'zb") {
+  try {
+      if (user.language === "O'zb") {
+        if (data.startsWith('next_')) {
+          let nextPage = parseInt(data.split('_')[1]);
+          showNewsPageUz(chatId, nextPage);
+      } else if (data.startsWith('prev_')) {
+          let prevPage = parseInt(data.split('_')[1]);
+          showNewsPageUz(chatId, prevPage);
+      }
+    }
+    if (user.language === "Rus") {
+        if (data.startsWith('next_')) {
+          let nextPage = parseInt(data.split('_')[1]);
+          showNewsPageRu(chatId, nextPage);
+      } else if (data.startsWith('prev_')) {
+          let prevPage = parseInt(data.split('_')[1]);
+          showNewsPageRu(chatId, prevPage);
+      }
+    }
+    if (user.language === "Eng") {
       if (data.startsWith('next_')) {
         let nextPage = parseInt(data.split('_')[1]);
-        showNewsPageUz(chatId, nextPage);
+        showNewsPageEn(chatId, nextPage);
     } else if (data.startsWith('prev_')) {
         let prevPage = parseInt(data.split('_')[1]);
-        showNewsPageUz(chatId, prevPage);
+        showNewsPageEn(chatId, prevPage);
     }
   }
-  if (user.language === "Rus") {
-      if (data.startsWith('next_')) {
-        let nextPage = parseInt(data.split('_')[1]);
-        showNewsPageRu(chatId, nextPage);
-    } else if (data.startsWith('prev_')) {
-        let prevPage = parseInt(data.split('_')[1]);
-        showNewsPageRu(chatId, prevPage);
-    }
+} catch (error) {
+    console.log(error);
   }
-  if (user.language === "Eng") {
-    if (data.startsWith('next_')) {
-      let nextPage = parseInt(data.split('_')[1]);
-      showNewsPageEn(chatId, nextPage);
-  } else if (data.startsWith('prev_')) {
-      let prevPage = parseInt(data.split('_')[1]);
-      showNewsPageEn(chatId, prevPage);
-  }
-}
 });

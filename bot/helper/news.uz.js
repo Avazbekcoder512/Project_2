@@ -26,8 +26,8 @@ const getNewsUz = async (msg) => {
     let start = page * newsPerPage;
     let end = start + newsPerPage;
     let newsToShow = cachedNews.slice(start, end);
-
-    let messageText = newsToShow
+    try {
+      let messageText = newsToShow
       .map((item) => {
         return `📰 *${item.title}*\n📅 ${item.pubDate}\n🔗 [Maqolani o'qish](${item.link})`;
       })
@@ -51,6 +51,10 @@ const getNewsUz = async (msg) => {
         }
     });
     return sentMessage
+    } catch (error) {
+      console.log(error);
+    }
+   
 }
 
 

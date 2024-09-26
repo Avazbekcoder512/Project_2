@@ -27,30 +27,34 @@ const getNewsRu = async (msg) => {
     let end = start + newsPerPage;
     let newsToShow = cachedNews.slice(start, end);
 
-    let messageText = newsToShow
-      .map((item) => {
-        return `📰 *${item.title}*\n📅 ${item.pubDate}\n🔗 [Прочитать статью](${item.link})`;
-      })
-      .join("\n\n");
-
-      let inlinekeyboard = [[]]
-
-      if(page > 0) {
-        inlinekeyboard[0].push({ text: '⬅️ Предыдущий', callback_data: `prev_${page - 1}` });
-      } 
-        inlinekeyboard[0].push({ text: `📄 Страница ${page + 1}`, callback_data: 'current_page' });
-
-        if (end < cachedNews.length) {
-            inlinekeyboard[0].push({ text: 'Следующий ➡️', callback_data: `next_${page + 1}` });
-        }
-
-      const sentMessage = await bot.sendMessage(chatId, messageText, {
-        parse_mode: 'Markdown',
-        reply_markup: {
-            inline_keyboard: inlinekeyboard
-        }
-    });
-    return sentMessage
+      try {
+        let messageText = newsToShow
+        .map((item) => {
+          return `📰 *${item.title}*\n📅 ${item.pubDate}\n🔗 [Прочитать статью](${item.link})`;
+        })
+        .join("\n\n");
+  
+        let inlinekeyboard = [[]]
+  
+        if(page > 0) {
+          inlinekeyboard[0].push({ text: '⬅️ Предыдущий', callback_data: `prev_${page - 1}` });
+        } 
+          inlinekeyboard[0].push({ text: `📄 Страница ${page + 1}`, callback_data: 'current_page' });
+  
+          if (end < cachedNews.length) {
+              inlinekeyboard[0].push({ text: 'Следующий ➡️', callback_data: `next_${page + 1}` });
+          }
+  
+        const sentMessage = await bot.sendMessage(chatId, messageText, {
+          parse_mode: 'Markdown',
+          reply_markup: {
+              inline_keyboard: inlinekeyboard
+          }
+      });
+      return sentMessage
+      } catch (error) {
+        console.log(error);
+      }
 }
 
 
