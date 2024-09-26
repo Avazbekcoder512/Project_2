@@ -9,6 +9,9 @@ const getWeatherRu = require("./helper/weather.ru")
 const getWeatherEn = require("./helper/weather.en")
 const getWeatherUz = require("./helper/weather.uz")
 const WeatherKeyboard = require("./helper/weather.keyboard")
+const { getNewsUz } = require("./helper/news.uz")
+const { getNewsRu } = require("./helper/news.ru")
+const { getNewsEn } = require("./helper/news.en")
 
 bot.on("message" , async msg => {
     const chatId = msg.from.id
@@ -40,7 +43,9 @@ bot.on("message" , async msg => {
         
         userMenu(msg)
         WeatherKeyboard(msg)
-
+        getNewsUz(msg)
+        getNewsRu(msg)
+        getNewsEn(msg)
 
         if (msg.location && user.language === "O'zb") {
             getWeatherUz(msg)

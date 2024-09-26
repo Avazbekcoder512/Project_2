@@ -19,7 +19,10 @@ const start = async (msg) => {
             action: ""
         })
         await newUser.save()
-        bot.sendMessage(chatId, `Iltimos tilni tanlang`, 
+        bot.sendMessage(chatId, 
+`Tilni tanlang. 
+Выберите язык. 
+Select a language.`, 
         {
             reply_markup: {
                 inline_keyboard: [
@@ -39,7 +42,10 @@ const start = async (msg) => {
             }
         })
     } else if (user) {
-        bot.sendMessage(chatId, `Iltimos tilni tanlang`, 
+        bot.sendMessage(chatId, 
+`Tilni tanlang.
+Выберите язык.
+Select a language.`, 
             {
                 reply_markup: {
                     inline_keyboard: [

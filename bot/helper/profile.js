@@ -18,7 +18,7 @@ const Profile = async (msg) => {
             parse_mode: "HTML"
         }
         
-        bot.sendMessage(chatId, `<strong>Profile</strong>\n
+        bot.sendMessage(chatId, `<strong>👤 Profile</strong>\n
 <b>Ism</b>:  ${user.first_name}\n
 <b>Familiya</b>:  ${user.last_name}\n
 <b>Foydalanuvchi nomi</b>:  ${user.username}\n
@@ -37,7 +37,7 @@ const Profile = async (msg) => {
             parse_mode: "HTML"
         }
         
-        bot.sendMessage(chatId, `<strong>Профиль</strong>\n
+        bot.sendMessage(chatId, `<strong>👤 Профиль</strong>\n
 <b>Имя</b>:  ${user.first_name}\n
 <b>Фамилия</b>:  ${user.last_name}\n
 <b>Имя пользователя</b>:  ${user.username}\n
@@ -56,7 +56,7 @@ const Profile = async (msg) => {
             parse_mode: "HTML"
         }
 
-        bot.sendMessage(chatId, `<strong>Profile</strong>\n
+        bot.sendMessage(chatId, `<strong>👤 Profile</strong>\n
 <b>Firstname</b>:  ${user.first_name}\n
 <b>Lastname</b>:  ${user.last_name}\n
 <b>Username</b>:  ${user.username}\n

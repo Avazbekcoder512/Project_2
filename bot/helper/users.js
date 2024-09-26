@@ -11,7 +11,7 @@ const getAllUsers = async (msg) => {
         
         let list = ''
         users.forEach(user => {
-            list+= `<b>${user.username}</b>: ${user.createdAt.toLocaleString()}\n`
+            list+= `<b>👤 Foydalanuvchi nomi: </b>${user.username},\n<b>Botga birinchi kirgan vaqti: </b>${user.createdAt.toLocaleString()},\n<b>Telefon raqami: </b>${user.phone}\n\n`
         })
 
         const keyboard = {
@@ -24,7 +24,7 @@ const getAllUsers = async (msg) => {
             },
             parse_mode: "HTML"
         }
-        bot.sendMessage(chatId, `<strong>Foydalanuvchilar ro'yhati</strong>
+        bot.sendMessage(chatId, `<strong>📑 FOYDALANUVCHILAR RO'YXATI</strong>\n
 ${list}`, keyboard)
     }
 
@@ -33,7 +33,7 @@ ${list}`, keyboard)
         
         let list = ''
         users.forEach(user => {
-            list+= `<b>${user.username}</b>: ${user.createdAt.toLocaleString()}\n`
+            list+= `<b>👤 Имя пользователя: </b>${user.username},\n<b>Время первого входа бота: </b>${user.createdAt.toLocaleString()},\n<b>Номер телефона: </b>${user.phone}\n\n`
         })
 
         const keyboard = {
@@ -46,7 +46,7 @@ ${list}`, keyboard)
             },
             parse_mode: "HTML"
         }
-        bot.sendMessage(chatId, `<strong>Список пользователей</strong>
+        bot.sendMessage(chatId, `<strong>📑 СПИСОК ПОЛЬЗОВАТЕЛЕЙ</strong>\n
 ${list}`, keyboard)
             user.action = "Menu"
             await User.findByIdAndUpdate(user._id, user, {new:true})
@@ -57,7 +57,7 @@ ${list}`, keyboard)
         
         let list = ''
         users.forEach(user => {
-            list+= `<b>${user.username}</b>: ${user.createdAt.toLocaleString()}\n`
+            list+= `<b>👤 Username: </b>${user.username},\n<b>The time the bot first entered: </b>${user.createdAt.toLocaleString()},\n<b>Phone number: </b>${user.phone}\n\n`
         })
 
         const keyboard = {
@@ -70,7 +70,7 @@ ${list}`, keyboard)
             },
             parse_mode: "HTML"
         }
-        bot.sendMessage(chatId, `<strong>List of users</strong>
+        bot.sendMessage(chatId, `<strong>📑 LIST OF USERS</strong>\n
 ${list}`, keyboard)
             user.action = "Menu"
             await User.findByIdAndUpdate(user._id, user, {new:true})
