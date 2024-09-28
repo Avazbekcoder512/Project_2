@@ -1,30 +1,48 @@
 const { bot } = require("../bot");
-const User = require("../../model/user.model");
 const { showNewsPageUz } = require("./news.uz");
 const { showNewsPageRu } = require("./news.ru");
 const { showNewsPageEn } = require("./news.en");
 
 bot.on("callback_query", async (query) => {
-  const data  = query.data;
+  const data = query.data;
   const chatId = query.message.chat.id;
-  const user = await User.findOne({ chatId: chatId }).lean();
 
-  bot.editMessageReplyMarkup({inline_keyboard: [] }, 
-    { chat_id: chatId, message_id: query.message.message_id})
+  const userResponse = await fetch(
+    `https://sheetdb.io/api/v1/${process.env.DB_KEY}/search?ChatId=${chatId}`,
+    {
+      method: "GET",
+    }
+  );
 
-  if (!user.language) {
+  const userData = await userResponse.json();
+
+  bot.editMessageReplyMarkup(
+    { inline_keyboard: [] },
+    { chat_id: chatId, message_id: query.message.message_id }
+  );
+
+  if (!userData || userData.length === 0 || !userData[0].Language) {
     if (data === "O'zbek tili") {
-      await User.findByIdAndUpdate(
-        user._id,
+      const newUserResponse = await fetch(
+        `https://sheetdb.io/api/v1/${process.env.DB_KEY}/ChatId/${chatId}`,
         {
-          ...user,
-          language: "O'zb",
-        },
-        { new: true }
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            data: {
+              Language: "O'zb",
+            },
+          }),
+        }
       );
+
+      const newUserData = await newUserResponse.json();
+      console.log(newUserData);
       bot.sendMessage(
         chatId,
-        "Assalomu alaykum 👋. Botimizga xush kelibsuz 🤝. Iltimos telefon raqamingizni yuboring",
+        "Assalomu alaykum 👋. Botimizga xush kelibsiz 🤝. Iltimos telefon raqamingizni yuboring",
         {
           reply_markup: {
             keyboard: [
@@ -39,17 +57,24 @@ bot.on("callback_query", async (query) => {
           },
         }
       );
-    }
-
-    if (data === "Rus tili") {
-      await User.findByIdAndUpdate(
-        user._id,
+    } else if (data === "Rus tili") {
+      const newUserResponse = await fetch(
+        `https://sheetdb.io/api/v1/${process.env.DB_KEY}/ChatId/${chatId}`,
         {
-          ...user,
-          language: "Rus",
-        },
-        { new: true }
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            data: {
+              Language: "Rus",
+            },
+          }),
+        }
       );
+
+      const newUserData = await newUserResponse.json();
+      console.log(newUserData);
       bot.sendMessage(
         chatId,
         "Привет 👋. Добро пожаловать в наш бот 🤝. Пожалуйста, пришлите свой номер телефона",
@@ -67,17 +92,24 @@ bot.on("callback_query", async (query) => {
           },
         }
       );
-    }
-
-    if (data === "Ingliz tili") {
-      await User.findByIdAndUpdate(
-        user._id,
+    } else if (data === "Ingliz tili") {
+      const newUserResponse = await fetch(
+        `https://sheetdb.io/api/v1/${process.env.DB_KEY}/ChatId/${chatId}`,
         {
-          ...user,
-          language: "Eng",
-        },
-        { new: true }
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            data: {
+              Language: "Eng",
+            },
+          }),
+        }
       );
+
+      const newUserData = await newUserResponse.json();
+      console.log(newUserData);
       bot.sendMessage(
         chatId,
         "Hello 👋. Welcome to our bot 🤝. Please send your phone number",
@@ -96,16 +128,25 @@ bot.on("callback_query", async (query) => {
         }
       );
     }
-  } else if (user.language) {
+  } else if (userData[0] && userData[0].Language) {
     if (data === "O'zbek tili") {
-      await User.findByIdAndUpdate(
-        user._id,
+      const newUserResponse = await fetch(
+        `https://sheetdb.io/api/v1/${process.env.DB_KEY}/ChatId/${chatId}`,
         {
-          ...user,
-          language: "O'zb",
-        },
-        { new: true }
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            data: {
+              Language: "O'zb",
+            },
+          }),
+        }
       );
+
+      const newUserData = await newUserResponse.json();
+      console.log(newUserData);
       bot.sendMessage(
         chatId,
         "Assalomu alaykum 👋. Botimizga xush kelibsuz 🤝. Botdan to'liq foydalanish uchun Menyuni bosing",
@@ -119,14 +160,23 @@ bot.on("callback_query", async (query) => {
     }
 
     if (data === "Rus tili") {
-      await User.findByIdAndUpdate(
-        user._id,
+      const newUserResponse = await fetch(
+        `https://sheetdb.io/api/v1/${process.env.DB_KEY}/ChatId/${chatId}`,
         {
-          ...user,
-          language: "Rus",
-        },
-        { new: true }
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            data: {
+              Language: "Rus",
+            },
+          }),
+        }
       );
+
+      const newUserData = await newUserResponse.json();
+      console.log(newUserData);
       bot.sendMessage(
         chatId,
         "Привет 👋. Добро пожаловать в наш бот 🤝. Нажмите «Меню», чтобы полностью использовать бота.",
@@ -140,14 +190,23 @@ bot.on("callback_query", async (query) => {
     }
 
     if (data === "Ingliz tili") {
-      await User.findByIdAndUpdate(
-        user._id,
+      const newUserResponse = await fetch(
+        `https://sheetdb.io/api/v1/${process.env.DB_KEY}/ChatId/${chatId}`,
         {
-          ...user,
-          language: "Eng",
-        },
-        { new: true }
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            data: {
+              Language: "Eng",
+            },
+          }),
+        }
       );
+
+      const newUserData = await newUserResponse.json();
+      console.log(newUserData);
       bot.sendMessage(
         chatId,
         "Hello 👋. Welcome to our bot 🤝. Click the Menu button to fully utilize the bot",
@@ -162,40 +221,49 @@ bot.on("callback_query", async (query) => {
   }
 });
 
-bot.on('callback_query', async (query) => {
+bot.on("callback_query", async (query) => {
   const chatId = query.message.chat.id;
-  const data = query.data;
-  const user = await User.findOne({ chatId: chatId }).lean();
+  const messageId = query.message.message_id;
+  let action = query.data;
+
+  const userResponse = await fetch(
+    `https://sheetdb.io/api/v1/${process.env.DB_KEY}/search?ChatId=${chatId}`,
+    {
+      method: "GET",
+    }
+  );
+
+  const userData = await userResponse.json();
 
   try {
-      if (user.language === "O'zb") {
-        if (data.startsWith('next_')) {
-          let nextPage = parseInt(data.split('_')[1]);
-          showNewsPageUz(chatId, nextPage);
-      } else if (data.startsWith('prev_')) {
-          let prevPage = parseInt(data.split('_')[1]);
-          showNewsPageUz(chatId, prevPage);
+    if (userData[0].Language === "O'zb") {
+      if (action.startsWith("next_")) {
+        let page = parseInt(action.split("_")[1]);
+        showNewsPageUz(chatId, page);
+      } else if (action.startsWith("prev_")) {
+        let page = parseInt(action.split("_")[1]);
+        showNewsPageUz(chatId, page);
       }
     }
-    if (user.language === "Rus") {
-        if (data.startsWith('next_')) {
-          let nextPage = parseInt(data.split('_')[1]);
-          showNewsPageRu(chatId, nextPage);
-      } else if (data.startsWith('prev_')) {
-          let prevPage = parseInt(data.split('_')[1]);
-          showNewsPageRu(chatId, prevPage);
+    if (userData[0].Language === "Rus") {
+      if (action.startsWith("next_")) {
+        let page = parseInt(action.split("_")[1]);
+        showNewsPageRu(chatId, page);
+      } else if (action.startsWith("prev_")) {
+        let page = parseInt(action.split("_")[1]);
+        showNewsPageRu(chatId, page);
       }
     }
-    if (user.language === "Eng") {
-      if (data.startsWith('next_')) {
-        let nextPage = parseInt(data.split('_')[1]);
-        showNewsPageEn(chatId, nextPage);
-    } else if (data.startsWith('prev_')) {
-        let prevPage = parseInt(data.split('_')[1]);
-        showNewsPageEn(chatId, prevPage);
+    if (userData[0].Language === "Eng") {
+      if (action.startsWith("next_")) {
+        let page = parseInt(action.split("_")[1]);
+        showNewsPageEn(chatId, page);
+      } else if (action.startsWith("prev_")) {
+        let page = parseInt(action.split("_")[1]);
+        showNewsPageEn(chatId, page);
+      }
     }
-  }
-} catch (error) {
+  } catch (error) {
     console.log(error);
   }
 });

@@ -1,6 +1,5 @@
 const { bot } = require("./bot")
 const { start, addContact } = require("./helper/commands")
-const User = require("../model/user.model")
 const { userMenu } = require("./helper/userMenyu")
 const { getAllUsers } = require("./helper/users")
 const { Profile } = require("./helper/profile")
@@ -17,24 +16,27 @@ bot.on("message" , async msg => {
     const chatId = msg.from.id
     const text = msg.text 
   
+    const userResponse = await fetch(
+        `https://sheetdb.io/api/v1/${process.env.DB_KEY}/search?ChatId=${chatId}`,
+        {
+          method: "GET",
+        }
+      );
+    
+      const userData = await userResponse.json();
     
     if (text === "/start") {
         start(msg)
     }
 
-    const user = await User.findOne({chatId: chatId}).lean()
         
-    if(user) {
-        if (!user.phone && user.language) {
+    if(userData[0]) {
+        if (!userData[0].Phone_number && userData[0].Language) {
             addContact(msg)
         }
         
-        
-        if (user.admin) {
+        if(userData[0].Role === "admin") {
             adminMenyu(msg)
-        }
-        
-        if(user.admin) {
             getAllUsers(msg),
             Profile(msg)
         } else {
@@ -47,11 +49,11 @@ bot.on("message" , async msg => {
         getNewsRu(msg)
         getNewsEn(msg)
 
-        if (msg.location && user.language === "O'zb") {
+        if (msg.location && userData[0].Language === "O'zb") {
             getWeatherUz(msg)
-        } else if (msg.location && user.language === "Rus") {
+        } else if (msg.location && userData[0].Language === "Rus") {
             getWeatherRu(msg)
-        } else if (msg.location && user.language === "Eng") {
+        } else if (msg.location && userData[0].Language === "Eng") {
             getWeatherEn(msg)
         }
     }

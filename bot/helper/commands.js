@@ -1,24 +1,50 @@
 const { bot } = require("../bot")
-const User = require("../../model/user.model")
 const Menu = require("./Menu")
 
+const currentDate = new Date()
+
+const year = currentDate.getFullYear();
+const month = String(currentDate.getMonth() + 1).padStart(2, '0') 
+const day = String(currentDate.getDate()).padStart(2, '0')
+const hours = String(currentDate.getHours()).padStart(2, '0')
+const minutes = String(currentDate.getMinutes()).padStart(2, '0')
+const seconds = String(currentDate.getSeconds()).padStart(2, '0')
+
+const formattedDate = `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`
+
 const start = async (msg) => {
-    const chatId = msg.from.id
+    const chatId = msg.from.id;
+
+    const userResponse = await fetch(`https://sheetdb.io/api/v1/${process.env.DB_KEY}/search?ChatId=${chatId}`, {
+        method: 'GET'
+    });
+
+    const userData = await userResponse.json();
+
+    if (userData.length === 0) {
+        const newUserResponse = await fetch(`https://sheetdb.io/api/v1/${process.env.DB_KEY}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "data": {
+                    "Firstname": msg.from.first_name,
+                    "Lastname": msg.from.last_name,
+                    "Username": msg.from.username,
+                    "ChatId": msg.from.id,
+                    "Phone_number": "",
+                    "Role": "user",
+                    "Language": "",
+                    "CreatedAt": formattedDate
+                }
+            })
+        });
+
+        const newUserData = await newUserResponse.json();
+        console.log(newUserData);
         
 
-    const user = await User.findOne({chatId: chatId}).lean()
-
-    if (!user) {
-        const newUser = new User({
-            first_name: msg.from.first_name,
-            last_name: msg.from.last_name,
-            username: msg.from.username,
-            chatId,
-            admin: false,
-            createdAt: new Date(),
-            action: ""
-        })
-        await newUser.save()
         bot.sendMessage(chatId, 
 `Tilni tanlang. 
 Выберите язык. 
@@ -40,45 +66,76 @@ Select a language.`,
                     }]
                 ],
             }
-        })
-    } else if (user) {
+        });
+    } else {
         bot.sendMessage(chatId, 
 `Tilni tanlang.
 Выберите язык.
 Select a language.`, 
-            {
-                reply_markup: {
-                    inline_keyboard: [
-                        [{
-                            text: "🇺🇿 O'zb",
-                            callback_data: "O'zbek tili"
-                        }],
-                        [{
-                            text: "🇷🇺 Rus",
-                            callback_data: "Rus tili"
-                        },
-                        {
-                            text: "🇬🇧 Eng",
-                            callback_data: "Ingliz tili"
-                        }]
-                    ],
-                }
-            })
-    } else if (user.language) {
-        Menu(msg)
+        {
+            reply_markup: {
+                inline_keyboard: [
+                    [{
+                        text: "🇺🇿 O'zb",
+                        callback_data: "O'zbek tili"
+                    }],
+                    [{
+                        text: "🇷🇺 Rus",
+                        callback_data: "Rus tili"
+                    },
+                    {
+                        text: "🇬🇧 Eng",
+                        callback_data: "Ingliz tili"
+                    }]
+                ],
+            }
+        });
+        
+        if (userData[0].Language) {
+            Menu(msg);
+        }
     }
 }
 
+
 const addContact = async (msg) => {
     const chatId = msg.from.id
-    const user = await User.findOne({chatId: chatId}).lean()
+    const adminNumbers = ["+998919194373"]
+
+    const userResponse = await fetch(
+        `https://sheetdb.io/api/v1/${process.env.DB_KEY}/search?ChatId=${chatId}`,
+        {
+          method: "GET",
+        }
+      );
     
+      const userData = await userResponse.json();
+      
     if (msg.contact.phone_number) {
-        user.phone = msg.contact.phone_number
-        user.admin = msg.contact.phone_number == "+998919194373"
-        await User.findByIdAndUpdate(user._id, user, {new:true})
+
+        const isAdmin = adminNumbers.includes(msg.contact.phone_number)
+        const role = isAdmin ? "admin" :"user"
+
+        const newUserResponse = await fetch(
+            `https://sheetdb.io/api/v1/${process.env.DB_KEY}/ChatId/${chatId}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                data: {
+                    "Phone_number": msg.contact.phone_number,
+                    "Role": role
+                },
+              }),
+            }
+          );
+    
+          const newUserData = await newUserResponse.json();
+          console.log(newUserData);
         
-        switch (user.language) {
+        switch (userData[0].Language) {
             case "O'zb":
                 bot.sendMessage(chatId, "Botdan to'liq foydalanish uchun Menyuni bosing", {
                     reply_markup: {

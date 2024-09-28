@@ -1,12 +1,15 @@
 const { bot } = require("../bot")
-const User = require("../../model/user.model")
 
 const userMenu = async (msg) => {
     const chatId = msg.from.id    
-    const user = await User.findOne({chatId: chatId})
+    const userResponse = await fetch(`https://sheetdb.io/api/v1/${process.env.DB_KEY}/search?ChatId=${chatId}`, {
+        method: 'GET'
+    });
 
-    if (!user.admin) {
-        if (user.language === "O'zb" && msg.text === "Menyu") {
+    const userData = await userResponse.json();
+
+    if (userData[0].Role === "user") {
+        if (userData[0].Language === "O'zb" && msg.text === "Menyu") {
             bot.sendMessage(chatId, "Tanlang",
                 {
                     reply_markup: {
@@ -19,7 +22,7 @@ const userMenu = async (msg) => {
                 })
         }
 
-        if (user.language === "Rus" && msg.text === "Меню") {
+        if (userData[0].Language === "Rus" && msg.text === "Меню") {
             bot.sendMessage(chatId, "Выбирать",
                 {
                     reply_markup: {
@@ -32,7 +35,7 @@ const userMenu = async (msg) => {
                 })
         }
 
-        if (user.language === "Eng" && msg.text === "Menu") {
+        if (userData[0].Language === "Eng" && msg.text === "Menu") {
             bot.sendMessage(chatId, "Select",
                 {
                     reply_markup: {

@@ -1,12 +1,14 @@
 const { bot } = require("../bot");
-const User = require("../../model/user.model");
 
 const Menu = async (msg) => {
   const chatId = msg.from.id;
-  const user = await User.findOne({ chatId: chatId }).lean();
+  const userResponse = await fetch(`https://sheetdb.io/api/v1/${process.env.DB_KEY}/search?ChatId=${chatId}`, {
+    method: 'GET'
+  });
+  const userData = await userResponse.json();
 
-  if (user.phone) {
-    switch (user.language) {
+  if (userData[0].Phoen_number) {
+    switch (userData[0].Language) {
       case "O'zb":
         bot.sendMessage(
           chatId,

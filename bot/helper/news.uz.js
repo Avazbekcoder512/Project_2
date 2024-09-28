@@ -21,44 +21,46 @@ const getNewsUz = async (msg) => {
   }
 };
 
-
-  const showNewsPageUz = async (chatId, page) => {
-    let start = page * newsPerPage;
-    let end = start + newsPerPage;
-    let newsToShow = cachedNews.slice(start, end);
-    try {
-      let messageText = newsToShow
+const showNewsPageUz = async (chatId, page) => {
+  let start = page * newsPerPage;
+  let end = start + newsPerPage;
+  let newsToShow = cachedNews.slice(start, end);
+  try {
+    let messageText = newsToShow
       .map((item) => {
         return `📰 *${item.title}*\n📅 ${item.pubDate}\n🔗 [Maqolani o'qish](${item.link})`;
       })
       .join("\n\n");
 
-      let inlinekeyboard = [[]]
+    let inlinekeyboard = [[]];
 
-      if(page > 0) {
-        inlinekeyboard[0].push({ text: '⬅️ Oldingi', callback_data: `prev_${page - 1}` });
-      } 
-        inlinekeyboard[0].push({ text: `📄 Sahifa ${page + 1}`, callback_data: 'current_page' });
-
-        if (end < cachedNews.length) {
-            inlinekeyboard[0].push({ text: 'Keyingi ➡️', callback_data: `next_${page + 1}` });
-        }
-
-      const sentMessage = await bot.sendMessage(chatId, messageText, {
-        parse_mode: 'Markdown',
-        reply_markup: {
-            inline_keyboard: inlinekeyboard
-        }
-    });
-    return sentMessage
-    } catch (error) {
-      console.log(error);
+    if (page > 0) {
+      inlinekeyboard[0].push({
+        text: "⬅️ Oldingi",
+        callback_data: `prev_${page - 1}`,
+      });
     }
-   
-}
+    if (end < cachedNews.length) {
+      inlinekeyboard[0].push({
+        text: "Keyingi ➡️",
+        callback_data: `next_${page + 1}`,
+      });
+    }
 
+    const sentMessage = await bot.sendMessage(chatId, messageText, {
+      parse_mode: "Markdown",
+      reply_markup: {
+        inline_keyboard: inlinekeyboard,
+      },
+    });
+
+    return sentMessage;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 module.exports = {
   getNewsUz,
-  showNewsPageUz
+  showNewsPageUz,
 };

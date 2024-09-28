@@ -1,17 +1,24 @@
 const { bot } = require("../bot")
-const User = require("../../model/user.model")
 
 const getAllUsers = async (msg) => {
     const chatId = msg.from.id
-    const user = await User.findOne({chatId: chatId}).lean()
-    
+    const userResponse = await fetch(`https://sheetdb.io/api/v1/${process.env.DB_KEY}/search?ChatId=${chatId}`, {
+        method: 'GET'
+    });
+
+    const userData = await userResponse.json();
+
+    const userRespons = await fetch(`https://sheetdb.io/api/v1/${process.env.DB_KEY}`, {
+        method: 'GET'
+    });
+
+    const usersData = await userRespons.json()
 
     if (msg.text === "👥 Foydalanuvchilar") {
-        const users = await User.find().lean()
         
         let list = ''
-        users.forEach(user => {
-            list+= `<b>👤 Foydalanuvchi nomi: </b>${user.username},\n<b>Botga birinchi kirgan vaqti: </b>${user.createdAt.toLocaleString()},\n<b>Telefon raqami: </b>${user.phone}\n\n`
+        usersData.forEach(userData => {
+            list+= `<b>👤 Foydalanuvchi nomi: </b>${userData.Username},\n<b>Botga birinchi kirgan vaqti: </b>${userData.CreatedAt.toLocaleString()},\n<b>Telefon raqami: </b>${userData.Phone_number}\n\n`
         })
 
         const keyboard = {
@@ -28,12 +35,11 @@ const getAllUsers = async (msg) => {
 ${list}`, keyboard)
     }
 
-    if (user.admin && msg.text === "👥 Пользователи") {
-        const users = await User.find().lean()
+    if (msg.text === "👥 Пользователи") {
         
         let list = ''
-        users.forEach(user => {
-            list+= `<b>👤 Имя пользователя: </b>${user.username},\n<b>Время первого входа бота: </b>${user.createdAt.toLocaleString()},\n<b>Номер телефона: </b>${user.phone}\n\n`
+        usersData.forEach(userData => {
+            list+= `<b>👤 Имя пользователя: </b>${userData.Username},\n<b>Время первого входа бота: </b>${userData.CreatedAt.toLocaleString()},\n<b>Номер телефона: </b>${userData.Phone_number}\n\n`
         })
 
         const keyboard = {
@@ -48,16 +54,13 @@ ${list}`, keyboard)
         }
         bot.sendMessage(chatId, `<strong>📑 СПИСОК ПОЛЬЗОВАТЕЛЕЙ</strong>\n
 ${list}`, keyboard)
-            user.action = "Menu"
-            await User.findByIdAndUpdate(user._id, user, {new:true})
     }
 
-    if (user.admin && msg.text === "👥 Users") {
-        const users = await User.find().lean()
+    if (msg.text === "👥 Users") {
         
         let list = ''
-        users.forEach(user => {
-            list+= `<b>👤 Username: </b>${user.username},\n<b>The time the bot first entered: </b>${user.createdAt.toLocaleString()},\n<b>Phone number: </b>${user.phone}\n\n`
+        usersData.forEach(userData => {
+            list+= `<b>👤 Username: </b>${userData.Username},\n<b>The time the bot first entered: </b>${userData.CreatedAt.toLocaleString()},\n<b>Phone number: </b>${userData.Phone_number}\n\n`
         })
 
         const keyboard = {
@@ -72,8 +75,6 @@ ${list}`, keyboard)
         }
         bot.sendMessage(chatId, `<strong>📑 LIST OF USERS</strong>\n
 ${list}`, keyboard)
-            user.action = "Menu"
-            await User.findByIdAndUpdate(user._id, user, {new:true})
     }
 }
 

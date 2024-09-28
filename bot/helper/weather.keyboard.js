@@ -1,9 +1,7 @@
 const { bot } = require("../bot")
-const User = require("../../model/user.model")
 
 const WeatherKeyboard = async (msg) => {
     const chatId = msg.from.id
-    const user = await User.findOne({chatId: chatId})
 
     if (msg.text === "🌤 Ob-havo") {
         bot.sendMessage(chatId, "Iltimos 📍 lakatsiyangizni yuboring", {
