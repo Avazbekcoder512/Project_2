@@ -114,7 +114,7 @@ const addContact = async (msg) => {
     if (msg.contact.phone_number) {
 
         const isAdmin = adminNumbers.includes(msg.contact.phone_number)
-        const role = isAdmin ? "admin" :"user"
+        const role = isAdmin ? "admin" : "user"
 
         const newUserResponse = await fetch(
             `https://sheetdb.io/api/v1/${process.env.DB_KEY}/ChatId/${chatId}`,
