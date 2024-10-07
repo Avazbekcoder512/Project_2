@@ -117,7 +117,7 @@ const addContact = async (msg) => {
         const role = isAdmin ? "admin" : "user"
 
         const newUserResponse = await fetch(
-            `https://sheetdb.io/api/v1/${process.env.DB_KEY}/ChatId/${chatId}`,
+            `https://sheetdb.io/api/v1/${process.env.DB_KEY}/search?ChatId=${chatId}`,
             {
               method: "PUT",
               headers: {
